@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #define MEM_SIZE 32768
 
@@ -35,7 +36,12 @@ int main()
 	int tmp;
 	proglen = fread(raw, 1, MEM_SIZE, stdin);
 
+#ifdef DEBUG
+	int __ctr = 0;
+	int tapemax = 0;
 	printf("source:\n%s\n\nlen: %d chars (%d)\n\n", raw, (int)proglen, (int)strlen(raw));
+#endif
+
 	while (instrp < proglen)
 	{
 		instr[instrp].instr = raw[instrp];
@@ -54,19 +60,20 @@ int main()
 	}
 
 	if (stackp) {
-		fputs("Unmatched bracket.", stderr);
-		exit(1);
+		fputs("Unmatched bracket.\n", stderr);
+		return 1;
 	}
 
-	int __ctr = 0;
-	int tapemax = 0;
 	instrp = 0;
 	while (instrp < proglen)
 	{
+
+#ifdef DEBUG
 		__ctr++;
 		instr[instrp].execcount++;
-
 		if (tapep > tapemax) tapemax = tapep;
+#endif
+
 		switch (instr[instrp].instr)
 		{
 			case '>':
@@ -93,6 +100,7 @@ int main()
 				putchar(tape[tapep]);
 				break;
 
+#ifdef DEBUG
 			case '#':
 				{
 					int x=0;
@@ -103,22 +111,29 @@ int main()
 					puts("");
 				}
 				break;
+#endif
 
 			case '[':
 				if (tape[tapep])
 				{
+#ifdef DEBUG
 					instr[instrp].pushcount++;
+#endif
 					stack[stackp++] = instrp;
 				}
 				else
 				{
+#ifdef DEBUG
 					instr[instrp].jumpcount++;
+#endif
 					instrp = instr[instrp].jump;
 				}
 				break;
 
 			case ']':
+#ifdef DEBUG
 				instr[instrp].popcount++;
+#endif
 				instrp = stack[--stackp];
 				continue;
 				break;
@@ -126,6 +141,7 @@ int main()
 		++instrp;
 	}
 
+#ifdef DEBUG
 	instrp = 0;
 	while (instrp < proglen)
 	{
@@ -149,4 +165,5 @@ int main()
 	}
 
 	printf("\n\n__ctr = %d\ntapemax = %d\n", __ctr, tapemax);
+#endif
 }

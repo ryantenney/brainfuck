@@ -97,6 +97,7 @@ void yylex() {
 		 *cmd = NULL,
 		 *start = NULL;
 	size_t count = 1;
+
 	while (yynext())
 	{
 		switch (yych) {
