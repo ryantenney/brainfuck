@@ -19,13 +19,14 @@ typedef struct _instr_t instr_t;
 struct _instr_t {
 	int jump;
 	char instr;
+#ifdef DEBUG
 	int execcount;
 	int pushcount;
 	int popcount;
 	int jumpcount;
+#endif
 };
 
-char raw[MEM_SIZE];
 instr_t instr[MEM_SIZE];
 int stack[MEM_SIZE];
 char tape[MEM_SIZE];
@@ -34,6 +35,7 @@ int  instrp, stackp, tapep, proglen;
 int main()
 {
 	int tmp;
+	char raw[MEM_SIZE];
 	proglen = fread(raw, 1, MEM_SIZE, stdin);
 
 #ifdef DEBUG
@@ -42,7 +44,7 @@ int main()
 	printf("source:\n%s\n\nlen: %d chars (%d)\n\n", raw, (int)proglen, (int)strlen(raw));
 #endif
 
-	while (instrp < proglen)
+	for (instrp = 0; instrp < proglen; instrp++)
 	{
 		instr[instrp].instr = raw[instrp];
 		switch (raw[instrp])
@@ -56,7 +58,6 @@ int main()
 				instr[instrp].jump = tmp;
 				break;
 		}
-		++instrp;
 	}
 
 	if (stackp) {
@@ -65,7 +66,7 @@ int main()
 	}
 
 	instrp = 0;
-	while (instrp < proglen)
+	for (instrp = 0; instrp < proglen; instrp++)
 	{
 
 #ifdef DEBUG

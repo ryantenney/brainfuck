@@ -1,3 +1,6 @@
 .DS_Store
 bff
+*.dSYM
 tinybfi
+minibfi
+microbfi
