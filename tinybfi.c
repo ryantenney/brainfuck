@@ -41,7 +41,8 @@ int main()
 #ifdef DEBUG
 	int __ctr = 0;
 	int tapemax = 0;
-	printf("source:\n%s\n\nlen: %d chars (%d)\n\n", raw, (int)proglen, (int)strlen(raw));
+	printf("source:\n%s\n\nlen: %d chars (%d)\n\n",
+			raw, (int)proglen, (int)strlen(raw));
 #endif
 
 	for (instrp = 0; instrp < proglen; instrp++)
@@ -151,7 +152,10 @@ int main()
 		{
 			case '[':
 			case ']':
-				printf("\tpair %4d; exec %4d; jump %4d; push %4d; pop %4d;", instr[instrp].jump, instr[instrp].execcount, instr[instrp].jumpcount, instr[instrp].pushcount, instr[instrp].popcount);
+				printf("\tpair %4d; exec %4d; jump %4d; push %4d; pop %4d;",
+						instr[instrp].jump, instr[instrp].execcount,
+						instr[instrp].jumpcount, instr[instrp].pushcount,
+						instr[instrp].popcount);
 				break;
 			case '>':
 			case '<':

@@ -1,36 +1,28 @@
 CC = gcc $(CCFLAGS)
-CCFLAGS = -std=c99 -pedantic -Wall $(CCOPTIMIZE) $(CCDEBUG)
-CCOPTIMIZE = -O0
+CCFLAGS = -std=c99 -pedantic -Wall -O$(CCOPTLVL) $(CCDEBUG)
+CCOPTLVL = 0
 CCDEBUG =
-
-CC_APATHETIC = gcc -std=c99 $(CCOPTIMIZE) $(CCDEBUG)
 
 PROGRAMS = bff tinybfi minibfi microbfi
 
+MINIFY = cat $< | tr -d '\n\t ' > $@
+PRINT_SIZE = @ls -la $@ | awk '{print $$9 " is " $$5 " bytes"}'
 
 
-bff : bff.c bff.h
-	$(CC) -o bff bff.c
+build : $(PROGRAMS)
 
-tinybfi : tinybfi.c
-	$(CC) -o tinybfi tinybfi.c
+.c:
+	$(CC) -o $@ $@.c
 
-minibfi : minibfi.c
-	$(CC) -o minibfi minibfi.c
+bff.c : bff.h
 
 microbfi.c : microbfi_formatted.c
-	cat microbfi_formatted.c | tr -d '\n\t ' > microbfi.c
+	$(MINIFY)
+	$(PRINT_SIZE)
 
-microbfi : microbfi.c
-	$(CC_APATHETIC) -o microbfi microbfi.c
-
-
-
-.PHONY : all clean rebuild
-
-all : $(PROGRAMS)
+.PHONY : build clean rebuild
 
 clean :
 	rm -rf bff bff.dSYM tinybfi tinybfi.dSYM minibfi minibfi.dSYM microbfi microbfi.dSYM
 
-rebuild : clean all
+rebuild : clean build
